@@ -1,14 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
-import { InMemoryBooksRepository } from './repositories/in-memory-books.repository.js';
-import { BookModel } from './entities/book.entity.js';
+import { CreateBookDto } from 'src/books/dto/create-book.dto';
+import { UpdateBookDto } from 'src/books/dto/update-book.dto';
+import { BookModel } from 'src/books/entities/book.entity';
+import {
+  I_BOOK_REPOSITORY,
+  IBookRepository,
+} from 'src/books/repositories/i-book.repository';
+import { IBooksService } from 'src/books/services/i-book.service';
 
 @Injectable()
-export class BooksService {
+export class BooksService implements IBooksService {
   constructor(
-    @Inject(InMemoryBooksRepository)
-    private readonly bookRepository: InMemoryBooksRepository,
+    @Inject(I_BOOK_REPOSITORY) private readonly bookRepository: IBookRepository,
   ) {}
 
   create(createBookDto: CreateBookDto): BookModel {

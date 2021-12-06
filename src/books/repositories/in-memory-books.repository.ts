@@ -1,13 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import { BookModel } from '../entities/book.entity.js';
-import { CreateBookDto } from '../dto/create-book.dto.js';
-import { UpdateBookDto } from '../dto/update-book.dto.js';
+import { BookModel } from '../entities/book.entity';
+import { CreateBookDto } from '../dto/create-book.dto';
+import { UpdateBookDto } from '../dto/update-book.dto';
 import { Injectable } from '@nestjs/common';
+import { IBookRepository } from 'src/books/repositories/i-book.repository';
 
 const books: Array<BookModel> = [];
 
 @Injectable()
-export class InMemoryBooksRepository {
+export class BooksRepository implements IBookRepository {
   create(createBookDto: CreateBookDto): BookModel {
     const book = {
       id: uuidv4(),

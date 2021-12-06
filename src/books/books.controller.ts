@@ -8,16 +8,23 @@ import {
   Delete,
   NotFoundException,
   HttpStatus,
+  Inject,
 } from '@nestjs/common';
-import { BooksService } from './books.service';
+import { BooksService } from 'src/books/services/books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  I_BOOK_SERVICE,
+  IBooksService,
+} from 'src/books/services/i-book.service';
 
 @ApiTags('books')
 @Controller('books')
 export class BooksController {
-  constructor(private readonly booksService: BooksService) {}
+  constructor(
+    @Inject(I_BOOK_SERVICE) private readonly booksService: IBooksService,
+  ) {}
 
   @Post()
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Add book' })
