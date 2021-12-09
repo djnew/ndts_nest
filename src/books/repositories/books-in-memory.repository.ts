@@ -8,8 +8,8 @@ import { IBookRepository } from 'src/books/repositories/i-book.repository';
 const books: Array<BookModel> = [];
 
 @Injectable()
-export class BooksRepository implements IBookRepository {
-  create(createBookDto: CreateBookDto): BookModel {
+export class BooksInMemoryRepository implements IBookRepository {
+  async create(createBookDto: CreateBookDto): Promise<BookModel> {
     const book = {
       id: uuidv4(),
       ...createBookDto,
@@ -18,11 +18,11 @@ export class BooksRepository implements IBookRepository {
     return book;
   }
 
-  findAll(): Array<BookModel> {
+  async findAll(): Promise<BookModel[]> {
     return books;
   }
 
-  findOne(id: string): BookModel | false {
+  async findOne(id: string): Promise<BookModel | false> {
     const book = books.find((book) => book.id === id);
     if (!book) {
       return false;
@@ -31,7 +31,10 @@ export class BooksRepository implements IBookRepository {
     return book;
   }
 
-  update(id: string, updateBookDto: UpdateBookDto): BookModel | false {
+  async update(
+    id: string,
+    updateBookDto: UpdateBookDto,
+  ): Promise<BookModel | false> {
     const book = books.find((book) => book.id === id);
     if (!book) {
       return false;
@@ -46,7 +49,7 @@ export class BooksRepository implements IBookRepository {
     return book;
   }
 
-  remove(id: string): boolean {
+  async remove(id: string): Promise<boolean> {
     const index = books.findIndex((book) => book.id === id);
     books.splice(index, 1);
     return true;

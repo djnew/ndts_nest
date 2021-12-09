@@ -4,9 +4,9 @@ import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 
 export const I_BOOK_REPOSITORY = 'I_BOOK_REPOSITORY';
 export interface IBookRepository {
-  create(createBookDto: CreateBookDto): BookModel;
-  findAll(): Array<BookModel>;
-  findOne(id: string): BookModel | false;
-  update(id: string, updateBookDto: UpdateBookDto): BookModel | false;
-  remove(id: string): boolean;
+  create(createBookDto: CreateBookDto): Promise<BookModel | false>;
+  findAll(): Promise<BookModel[]>;
+  findOne(id: string): Promise<BookModel | false>;
+  update(id: string, updateBookDto: UpdateBookDto): Promise<BookModel | false>;
+  remove(id: string): Promise<boolean>;
 }

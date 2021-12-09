@@ -9,6 +9,7 @@ import {
   NotFoundException,
   HttpStatus,
   Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import { BooksService } from 'src/books/services/books.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -18,6 +19,7 @@ import {
   I_BOOK_SERVICE,
   IBooksService,
 } from 'src/books/services/i-book.service';
+import { BookModel } from 'src/books/entities/book.entity.js';
 
 @ApiTags('books')
 @Controller('books')
@@ -28,21 +30,33 @@ export class BooksController {
 
   @Post()
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Add book' })
-  create(@Body() createBookDto: CreateBookDto) {
-    return this.booksService.create(createBookDto);
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Book not save' })
+  async create(
+    @Body() createBookDto: CreateBookDto,
+  ): Promise<BookModel | BadRequestException> {
+    const book = await this.booksService.create(createBookDto);
+    if (book) {
+      return book;
+    } else {
+      return new BadRequestException({
+        message: 'Book not save',
+      });
+    }
   }
 
   @Get()
   @ApiResponse({ status: HttpStatus.OK, description: 'Get books' })
-  findAll() {
-    return this.booksService.findAll();
+  async findAll(): Promise<BookModel[]> {
+    return await this.booksService.findAll();
   }
 
   @ApiResponse({ status: HttpStatus.OK, description: 'Find one book' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Not found book' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const book = this.booksService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<BookModel | NotFoundException> {
+    const book = await this.booksService.findOne(id);
     if (!book) {
       return new NotFoundException({
         message: 'book not found',
@@ -58,8 +72,11 @@ export class BooksController {
   })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Not found book' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    const book = this.booksService.update(id, updateBookDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateBookDto: UpdateBookDto,
+  ): Promise<BookModel | NotFoundException> {
+    const book = await this.booksService.update(id, updateBookDto);
     if (!book) {
       return new NotFoundException({
         message: 'book not found',
@@ -74,8 +91,8 @@ export class BooksController {
   })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Not found book' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    const result = this.booksService.remove(id);
+  async remove(@Param('id') id: string): Promise<string | NotFoundException> {
+    const result = await this.booksService.remove(id);
     if (!result) {
       return new NotFoundException({
         message: 'book not found',

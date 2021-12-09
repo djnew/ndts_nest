@@ -5,13 +5,16 @@ import { UpdateBookDto } from 'src/books/dto/update-book.dto.js';
 export const I_BOOK_SERVICE = 'I_BOOK_SERVICE';
 
 export interface IBooksService {
-  create(createBookDto: CreateBookDto): BookModel;
+  create(createBookDto: CreateBookDto): Promise<false | BookModel>;
 
-  findAll(): Array<BookModel>;
+  findAll(): Promise<BookModel[]>;
 
-  findOne(id: string): BookModel | boolean;
+  findOne(id: string): Promise<BookModel | null | false>;
 
-  update(id: string, updateBookDto: UpdateBookDto): BookModel | boolean;
+  update(
+    id: string,
+    updateBookDto: UpdateBookDto,
+  ): Promise<BookModel | null | false>;
 
-  remove(id: string): boolean;
+  remove(id: string): Promise<boolean>;
 }

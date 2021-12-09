@@ -14,23 +14,26 @@ export class BooksService implements IBooksService {
     @Inject(I_BOOK_REPOSITORY) private readonly bookRepository: IBookRepository,
   ) {}
 
-  create(createBookDto: CreateBookDto): BookModel {
-    return this.bookRepository.create(createBookDto);
+  async create(createBookDto: CreateBookDto): Promise<false | BookModel> {
+    return await this.bookRepository.create(createBookDto);
   }
 
-  findAll(): Array<BookModel> {
+  async findAll(): Promise<BookModel[]> {
     return this.bookRepository.findAll();
   }
 
-  findOne(id: string): BookModel | boolean {
+  async findOne(id: string): Promise<BookModel | false> {
     return this.bookRepository.findOne(id);
   }
 
-  update(id: string, updateBookDto: UpdateBookDto): BookModel | boolean {
+  async update(
+    id: string,
+    updateBookDto: UpdateBookDto,
+  ): Promise<BookModel | false> {
     return this.bookRepository.update(id, updateBookDto);
   }
 
-  remove(id: string): boolean {
+  async remove(id: string): Promise<boolean> {
     return this.bookRepository.remove(id);
   }
 }
