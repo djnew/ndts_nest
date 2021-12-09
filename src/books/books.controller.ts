@@ -11,7 +11,6 @@ import {
   Inject,
   BadRequestException,
 } from '@nestjs/common';
-import { BooksService } from 'src/books/services/books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
