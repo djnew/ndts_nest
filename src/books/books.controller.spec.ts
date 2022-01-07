@@ -1,17 +1,53 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UpdateBookDto } from './dto/update-book.dto';
+import { BookModel } from './entities/book.entity';
 import { BooksController } from './books.controller';
-import { BooksService } from './services/books.service';
-import { I_BOOK_SERVICE } from './services/i-book.service';
+import { I_BOOK_SERVICE, IBooksService } from './services/i-book.service';
 import { I_BOOK_REPOSITORY } from './repositories/i-book.repository';
 import { BooksInMemoryRepository } from './repositories/books-in-memory.repository';
-import { BadRequestException } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
-import { BookModel } from './entities/book.entity';
+import * as request from 'supertest';
+
+const params: CreateBookDto = {
+  authors: 'string',
+  description: 'string',
+  favorite: 'string',
+  fileBook: 'string',
+  fileCover: 'string',
+  fileName: 'string',
+  title: 'string',
+};
+
+class MockService implements IBooksService {
+  async create(createBookDto: CreateBookDto): Promise<BookModel> {
+    return params;
+  }
+
+  async findAll(): Promise<BookModel[]> {
+    return [params as BookModel];
+  }
+
+  async findOne(id: string): Promise<BookModel | false | null> {
+    return params;
+  }
+
+  async remove(id: string): Promise<boolean> {
+    return true;
+  }
+
+  async update(
+    id: string,
+    updateBookDto: UpdateBookDto,
+  ): Promise<BookModel | false | null> {
+    return params;
+  }
+}
 
 describe('BooksController', () => {
   let controller: BooksController;
-  let service: BooksService;
-  let params: CreateBookDto;
+  let service: IBooksService;
+  let app: INestApplication;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,7 +55,7 @@ describe('BooksController', () => {
       providers: [
         {
           provide: I_BOOK_SERVICE,
-          useClass: BooksService,
+          useClass: MockService,
         },
         {
           provide: I_BOOK_REPOSITORY,
@@ -27,38 +63,53 @@ describe('BooksController', () => {
         },
       ],
     }).compile();
-    service = module.get<BooksService>(I_BOOK_SERVICE);
+
     controller = module.get<BooksController>(BooksController);
-    params = {
-      authors: 'string',
-      description: 'string',
-      favorite: 'string',
-      fileBook: 'string',
-      fileCover: 'string',
-      fileName: 'string',
-      title: 'string',
-    };
+
+    app = module.createNestApplication();
+    await app.init();
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('test methods', async () => {
-    const testService = Promise.resolve(null);
-    jest.spyOn(service, 'create').mockImplementation(() => testService);
-
-    expect(await controller.create(params)).toEqual(
-      new BadRequestException({
-        message: 'Book not save',
-      }),
-    );
+  it('create', () => {
+    return request(app.getHttpServer())
+      .post('/books')
+      .expect(HttpStatus.CREATED)
+      .expect(params);
   });
 
-  it('create success', async () => {
-    const testService = Promise.resolve(params as BookModel);
-    jest.spyOn(service, 'create').mockImplementation(() => testService);
+  it('list', () => {
+    return request(app.getHttpServer())
+      .get('/books')
+      .expect(HttpStatus.OK)
+      .expect([params]);
+  });
 
-    expect(await controller.create(params)).toEqual(params);
+  it('one', () => {
+    return request(app.getHttpServer())
+      .get('/books/test')
+      .expect(HttpStatus.OK)
+      .expect(params);
+  });
+
+  it('update', () => {
+    return request(app.getHttpServer())
+      .patch('/books/test')
+      .expect(HttpStatus.OK)
+      .expect(params);
+  });
+
+  it('delete', () => {
+    return request(app.getHttpServer())
+      .delete('/books/test')
+      .expect(HttpStatus.OK)
+      .expect('ok');
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

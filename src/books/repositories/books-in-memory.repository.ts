@@ -11,7 +11,7 @@ const books: Array<BookModel> = [];
 export class BooksInMemoryRepository implements IBookRepository {
   async create(createBookDto: CreateBookDto): Promise<BookModel> {
     const book = {
-      id: uuidv4(),
+      id: process.env.TEST ? 'test123' : uuidv4(),
       ...createBookDto,
     };
     books.push(book);

@@ -14,10 +14,7 @@ import {
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  I_BOOK_SERVICE,
-  IBooksService,
-} from './services/i-book.service';
+import { I_BOOK_SERVICE, IBooksService } from './services/i-book.service';
 import { BookModel } from './entities/book.entity.js';
 
 @ApiTags('books')
