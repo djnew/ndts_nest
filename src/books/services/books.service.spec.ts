@@ -10,6 +10,7 @@ describe('BooksService', () => {
   let service: BooksService;
   let repository: BooksInMemoryRepository;
   let params: CreateBookDto;
+  let id: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,7 +45,39 @@ describe('BooksService', () => {
   it('create', async () => {
     const testService = Promise.resolve(params as BookModel);
     jest.spyOn(repository, 'create').mockImplementation(() => testService);
-
+    const testCreate = await service.create(params);
+    if (testCreate) {
+      id = testCreate.id;
+    }
     expect(await service.create(params)).toEqual(params);
+  });
+
+  it('findAll', async () => {
+    const testService = Promise.resolve([params as BookModel]);
+    jest.spyOn(repository, 'findAll').mockImplementation(() => testService);
+    expect(await service.findAll()).toEqual([params]);
+  });
+
+  it('findOne', async () => {
+    const testService = Promise.resolve(params as BookModel);
+    jest.spyOn(repository, 'findOne').mockImplementation(() => testService);
+    expect(await service.findOne(id)).toEqual(params);
+  });
+
+  it('update', async () => {
+    const updateParams = {
+      ...params,
+      title: 'update',
+    };
+    const testService = Promise.resolve(updateParams as BookModel);
+    jest.spyOn(repository, 'update').mockImplementation(() => testService);
+    expect(await service.update(id, updateParams)).toEqual(updateParams);
+  });
+
+  it('remove', async () => {
+    jest
+      .spyOn(repository, 'remove')
+      .mockImplementation(() => Promise.resolve(true));
+    expect(await service.remove(id)).toBeTruthy();
   });
 });

@@ -11,8 +11,7 @@ export class BooksMongoRepository implements IBookRepository {
   async create(createBookDto: CreateBookDto): Promise<BookModel | false> {
     const newBook = new this.bookModel(createBookDto);
     try {
-      await newBook.save();
-      return newBook;
+      return await newBook.save();
     } catch (e) {
       console.error(e);
       return false;
@@ -25,7 +24,7 @@ export class BooksMongoRepository implements IBookRepository {
 
   async findOne(id: string): Promise<BookModel | false> {
     try {
-      const book = this.bookModel.findById(id).select('-__v');
+      const book = this.bookModel.findById(id);
       return book ?? false;
     } catch (e) {
       console.error(e);
