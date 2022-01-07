@@ -1,9 +1,9 @@
-import { IBookRepository } from 'src/books/repositories/i-book.repository';
+import { IBookRepository } from './i-book.repository';
 import { InjectModel } from '@nestjs/mongoose';
-import { Book, BookDocument, BookModel } from 'src/books/entities/book.entity';
+import { Book, BookDocument, BookModel } from '../entities/book.entity';
 import { Model } from 'mongoose';
-import { CreateBookDto } from 'src/books/dto/create-book.dto';
-import { UpdateBookDto } from 'src/books/dto/update-book.dto';
+import { CreateBookDto } from '../dto/create-book.dto';
+import { UpdateBookDto } from '../dto/update-book.dto';
 
 export class BooksMongoRepository implements IBookRepository {
   constructor(@InjectModel(Book.name) private bookModel: Model<BookDocument>) {}

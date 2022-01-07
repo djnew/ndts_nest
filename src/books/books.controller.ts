@@ -17,8 +17,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   I_BOOK_SERVICE,
   IBooksService,
-} from 'src/books/services/i-book.service';
-import { BookModel } from 'src/books/entities/book.entity.js';
+} from './services/i-book.service';
+import { BookModel } from './entities/book.entity.js';
 
 @ApiTags('books')
 @Controller('books')
