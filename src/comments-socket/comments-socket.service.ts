@@ -1,26 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { CommentsService } from '../comments/comments.service';
 import { CreateCommentsSocketDto } from './dto/create-comments-socket.dto';
-import { UpdateCommentsSocketDto } from './dto/update-comments-socket.dto';
 
 @Injectable()
 export class CommentsSocketService {
-  create(createCommentsSocketDto: CreateCommentsSocketDto) {
-    return 'This action adds a new commentsSocket';
+  constructor(
+    @Inject(CommentsService) private readonly commentsService: CommentsService,
+  ) {}
+  async create(createCommentsSocketDto: CreateCommentsSocketDto) {
+    return await this.commentsService.create(createCommentsSocketDto);
   }
 
-  findAll() {
-    return `This action returns all commentsSocket`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} commentsSocket`;
-  }
-
-  update(id: number, updateCommentsSocketDto: UpdateCommentsSocketDto) {
-    return `This action updates a #${id} commentsSocket`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} commentsSocket`;
+  getAllComments(id: string) {
+    return this.commentsService.findAllBookComment(id);
   }
 }

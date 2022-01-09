@@ -1,1 +1,4 @@
-export class CreateCommentsSocketDto {}
+export class CreateCommentsSocketDto {
+  bookId: string;
+  comment: string;
+}

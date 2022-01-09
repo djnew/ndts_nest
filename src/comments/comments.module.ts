@@ -12,5 +12,6 @@ import { BooksModule } from '../books/books.module';
   ],
   controllers: [CommentsController],
   providers: [CommentsService],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

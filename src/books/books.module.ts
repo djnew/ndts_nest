@@ -21,9 +21,11 @@ import { BooksMongoRepository } from './repositories/books-mongo.repository';
       provide: I_BOOK_SERVICE,
       useClass: BooksService,
     },
+  ],
+  exports: [
     {
-      provide: getModelToken(Book.name),
-      useClass: Book,
+      provide: I_BOOK_SERVICE,
+      useClass: BooksService,
     },
   ],
 })
