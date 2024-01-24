@@ -2,6 +2,8 @@ FROM node:16-alpine
 
 WORKDIR /var/www
 
+RUN npm install pm2@latest -g
+
 COPY ["./package*", "/var/www/"]
 
 RUN npm install

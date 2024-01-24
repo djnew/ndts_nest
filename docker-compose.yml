@@ -5,13 +5,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ndts-nest-app
-    entrypoint: ['npm', 'run', 'start:dev']
     env_file:
       - .env
     ports:
-      - 80:${PORT:-3000}
-    volumes:
-      - ".:/var/www"
+      - 5000:${PORT:-3000}
     links:
       - ndts-nest-mongo
     depends_on:
